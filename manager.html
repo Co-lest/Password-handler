@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password manager</title>
+  </head>
+  <body>
+    <h1>About this manager</h1>
+    <li>
+      <ul>
+        Enter the the name of the device, website or app You want to save the
+        password for.
+      </ul>
+      <ul>
+        Enter the password.
+      </ul>
+      <ul>
+        Enter any comment if necessary.
+      </ul>
+    </li>
+
+    <form action="includes/passwordHandler.inc.php" method="post" id="actualForm">
+      <label for="nameDevice">Name</label><br />
+      <input type="text" name="nameDevice" id="nameDevice" required /><br />
+      <label for="pass">Password</label><br />
+      <input type="password" name="pass" required id="pass" /><br />
+      <input type="checkbox" id="passwordCheck" name="passwordCheck" />
+      <label for="passwordCheck">See password</label><br />
+      <label for="comment">Comment</label><br />
+      <textarea name="comment" id="comment"></textarea><br />
+      <input type="submit" name="sub" id="submitForm" />
+    </form>
+  </body>
+  <style>
+    #comment {
+      width: 50%;
+      height: auto;
+      border-radius: 5px;
+      border: 1px solid;
+    }
+    .err {
+      color: red;
+    }
+  </style>
+  <script>
+    const submitForm = document.querySelector("#submitForm");
+    const nameDevice = document.querySelector("#nameDevice");
+    const pass = document.querySelector("#pass");
+    const actualForm = document.querySelector("#actualForm");
+    const passwordCheck = document.querySelector("#passwordCheck");
+
+    submitForm.addEventListener("click", () => {
+      try {
+        if (nameDevice.value.trim() == "" || pass.value == "") {
+          throw new Error("Must fill out all the recommended fields!");
+        }
+      } catch (errorMessage) {
+        const err = document.createElement("p");
+        err.textContent = errorMessage;
+        err.setAttribute("class", "err");
+        actualForm.appendChild(err);
+        const dis = setTimeout(() => {
+          err.remove();
+        }, 4000);
+        return;
+      }
+    });
+
+    let count = 0;
+
+    document.addEventListener("click", (event) => {
+      if ((event.target = "checkbox")) {
+        if (passwordCheck.checked) {
+          pass.setAttribute("type", "text");
+        } else {
+          pass.setAttribute("type", "password");
+        }
+      }
+    });
+
+    //document.onreload = make the checkbox to be false
+  </script>
+</html>
