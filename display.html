@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch Data</title>
+    <style>
+      table {
+        width: 60%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Table</h1>
+    <table id="usersTable">
+      <thead>
+        <tr>
+          <th>Device name</th>
+          <th>Password</th>
+          <th>comment</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script>
+      // Fetch data from the PHP script
+      fetch("fetch_data.inc.php")
+        .then((response) => response.json())
+        .then((data) => {
+          const tableBody = document.querySelector("#usersTable tbody");
+          data.forEach((user) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                        <td>${user.devicename}</td>
+                        <td>${user.passwords_column}</td>
+                        <td>${user.comment1}</td>
+                    `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    </script>
+  </body>
+</html>

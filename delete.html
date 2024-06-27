@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password manager</title>
+    <style>
+      table {
+        width: 60%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>How to delete</h1>
+    <li>
+        <ul>Put the app name or device name in the field.</ul>
+        <ul>Put its password to confirm the deletion.</ul>
+    </li>
+
+    <h1>Table</h1>
+    <table id="usersTable">
+      <thead>
+        <tr>
+          <th>Device name</th>
+          <th>Password</th>
+          <th>comment</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <section class="home">
+      <form action="include/delete.inc.php" method="post" id="actualForm">
+        <label for="nameDevice">Name:</label><br />
+        <input
+          type="text"
+          name="nameDevice"
+          id="nameDevice"
+          required
+          class="inputText"
+          placeholder="Device/email/app"
+          required
+        /><br />
+        <label for="pass">Password:</label><br />
+        <input
+          type="password"
+          name="pass"
+          required
+          id="pass"
+          class="inputText"
+          placeholder="Password"
+          required
+        /><br />
+        <input type="checkbox" id="passwordCheck" name="passwordCheck" />
+        <label for="passwordCheck">See password</label><br />
+        <label for="passConfirm">Confirm password:</label><br />
+        <input
+          type="password"
+          name="passConfirm"
+          id="passConfirm"
+          class="inputText"
+          placeholder="Confirm password"
+          required
+        /><br />
+        <input type="checkbox" id="passwordConfirmCheck" name="passwordConfirmCheck" />
+        <label for="passwordConfirmCheck">See password</label><br />
+        <input type="submit" name="sub" id="submitForm" />
+      </form>
+  </section>
+  <script>
+    const submitForm = document.querySelector("#submitForm");
+    const nameDevice = document.querySelector("#nameDevice");
+    const pass = document.querySelector("#pass");
+    const passConfirm = document.querySelector("#passConfirm");
+    const passwordCheck = document.querySelector("#passwordCheck");
+    const passwordConfirmCheck = document.querySelector("#passwordConfirmCheck");
+    const actualForm = document.querySelector("#actualForm");
+
+    window.addEventListener("load", () => {
+      passwordConfirmCheck.checked = false;
+      passwordCheck.checked = false;
+    })
+
+    submitForm.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const errors = document.querySelectorAll(".err");
+      errors.forEach(error => error.remove());
+
+      if (nameDevice.value.trim() === "" || pass.value.trim() === "" || passConfirm.value.trim() === "") {
+        errorDisplay("Must fill out all the recommended fields!");
+        return;
+      }
+
+      if (pass.value !== passConfirm.value) {
+        errorDisplay("Passwords do not match. Please enter again!");
+        return;
+      }
+
+      actualForm.submit();
+    });
+
+    function errorDisplay(errorMessage) {
+      const err = document.createElement("p");
+      err.textContent = errorMessage;
+      err.setAttribute("class", "err");
+      actualForm.appendChild(err);
+      setTimeout(() => {
+        err.remove();
+      }, 4000);
+    }
+
+    passwordCheck.addEventListener("change", () => {
+      pass.setAttribute("type", passwordCheck.checked ? "text" : "password");
+    });
+
+    passwordConfirmCheck.addEventListener("change", () => {
+      passConfirm.setAttribute("type", passwordConfirmCheck.checked ? "text" : "password");
+    });
+    //document.onreload = make the checkbox to be false
+  </script>
+  <script defer>
+        fetch("fetch_data.inc.php")
+        .then((response) => response.json())
+        .then((data) => {
+          const tableBody = document.querySelector("#usersTable tbody");
+          data.forEach((user) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                        <td>${user.devicename}</td>
+                        <td>${user.passwords_column}</td>
+                        <td>${user.comment1}</td>
+                    `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+  </script>
+</html>

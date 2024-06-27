@@ -18,7 +18,7 @@
         try {
             require_once "password.inc.php";
 
-            $query = "INSERT INTO USERS (`userName`, `pwd`, `email`) VALUES
+            $query = "INSERT INTO `passwords1` (`deviceName`, `passwords_column`, `comment1`) VALUES
             (?, ?, ?);";
 
             $stmt = $pdo->prepare($query);
@@ -28,25 +28,12 @@
             $stmt = null;
 
             header("Location: ../manager.html");
-
             die();
 
         } catch (PDOException $th) {
-            die("Query failed: {$th->getMessage()}");
             header("Location ../manager.html");
+            die("Query failed: {$th->getMessage()}");
         }
     } else {
         header("Location: ../manager.html");
     }
-
-
-
-/*
-CREATE DATABASE IF NOT EXISTS `passWord` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `passWord`;
-
-CREATE TABLE IF NOT EXISTS "sasa"(
-	"id" VARCHAR(255) NOT NULL,
-    
-);
-*/
